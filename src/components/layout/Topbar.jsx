@@ -2,12 +2,14 @@ import { useState } from "react";
 import { Search, Plus, Bell, ChevronDown } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { getInitials } from "../../utils/initials";
+import Notifications from "../ui/notifications";
 
 export default function Topbar() {
     const { user, logout } = useAuth();
     const initials = user ? getInitials(user.firstname, user.lastname) : "";
     const [menuOpen, setMenuOpen] = useState(false);
-    const [notificationsMenuOpen, setNotificationsMenuOpen] = useState(true);
+    const [notifBadgeActive, setNotifBadgeActive] = useState(false);
+    const [notificationsMenuOpen, setNotificationsMenuOpen] = useState(false);
 
     return (
         <header className="sticky top-0 z-10 flex items-center justify-between  gap-4 border-b border-gray-200 bg-white px-6 py-3">
@@ -31,22 +33,17 @@ export default function Topbar() {
                 <div className="relative">
                     <button 
                         onClick={()=>{setNotificationsMenuOpen(!notificationsMenuOpen)}}
-                        className=" shrink-0 rounded-lg border border-gray-200 p-2 text-gray-500 hover:bg-gray-50"
+                        className=" relative shrink-0 rounded-lg border border-gray-200 p-2 text-gray-500 hover:bg-gray-50"
                     >
                         <Bell size={18} />
+                        {notifBadgeActive && <div className=" bg-red-600 w-2 h-2 rounded-md z-10 absolute top-1.5" />}
                     </button>
 
-                    {notificationsMenuOpen && (
-                        <>
-                           <div className=" fixed inset-0 z-10 " onClick={() => setNotificationsMenuOpen((open) => !open)}/>
-                            <div
-                                className=" absolute right-0 flex items-center justify-between bg-white w-[400px] h-[400px] rounded-md z-20 mt-6"
-                            >
-                                <h1>Hello world</h1>
-                            </div>
-                            
-                        </>
-                    )}
+                    <Notifications 
+                            setNotifBadgeActive={setNotifBadgeActive} 
+                            notificationsMenuOpen={notificationsMenuOpen}
+                            setNotificationsMenuOpen={setNotificationsMenuOpen} 
+                    />
                 </div>
 
                 <div className="relative shrink-0">
